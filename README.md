@@ -31,7 +31,7 @@ To get started with the project:
 ## 3. Usage
 Once the application is up and running, you can interact with it through various endpoints:
 
-### Testing with Postman
+## 4. Testing with Postman
 
 To test these endpoints using Postman:
 
@@ -40,12 +40,11 @@ To test these endpoints using Postman:
 3. For POST and PUT requests, provide the necessary JSON data in the "Body" tab.
 4. Click **Send** to execute the request and view the response.
 
-By following these steps, you can interact with the API and test all the available endpoints for `Company`, `User`, and `Task`.
 
+<!--- Here I will show the Postman architecture image --->
 
-### 4. Test Custom Endpoints
+![Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
 
-You can test the custom endpoints provided by the application using Postman or any other API testing tool. Below is a description of how to manipulate the `Company`, `User`, and `Task` resources.
 
 
 #### 4.1. Company API Endpoints
@@ -234,8 +233,9 @@ You can test the custom endpoints provided by the application using Postman or a
   - **Method**: `POST`
   - **Description**: Creates a new user.
   - **Request Body Example**:
+
     ```json
-   {
+    {
 
         "name": "Rooon",
         "surname": "Weasley",
@@ -247,7 +247,8 @@ You can test the custom endpoints provided by the application using Postman or a
         }
     }
     ```
-  - **Response Example**:
+
+- **Response Example**:
     ```json
     {
         "id": 2,
@@ -275,7 +276,7 @@ You can test the custom endpoints provided by the application using Postman or a
         "email": "harry@example.com"
     }
     ```
-  - **Response Example**:
+- **Response Example**:
     ```json
     {
         "id": 2,
