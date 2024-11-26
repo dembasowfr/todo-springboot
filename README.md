@@ -40,10 +40,11 @@ To test these endpoints using Postman:
 3. For POST and PUT requests, provide the necessary JSON data in the "Body" tab.
 4. Click **Send** to execute the request and view the response.
 
-By following these steps, you can interact with the API and test all the available endpoints for `Company`, `User`, and `Task`.
 
-**Note**: You can find the Postman collection for this project in the `postman` directory. Import this collection into Postman to quickly get started with testing the API.
+<!--- Here I will show the Postman architecture image --->
+
 ![Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
+
 
 
 #### 4.1. Company API Endpoints
