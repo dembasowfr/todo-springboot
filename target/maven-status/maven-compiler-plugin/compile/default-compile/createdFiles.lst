@@ -1,13 +1,1 @@
-com\example\springboot\controller\TaskController.class
-com\example\springboot\service\TaskService.class
-com\example\springboot\repository\UserRepository.class
-com\example\springboot\entity\User.class
-com\example\springboot\entity\Company.class
-com\example\springboot\repository\CompanyRepository.class
 com\example\springboot\Application.class
-com\example\springboot\service\CompanyService.class
-com\example\springboot\entity\Task.class
-com\example\springboot\controller\CompanyController.class
-com\example\springboot\controller\UserController.class
-com\example\springboot\service\UserService.class
-com\example\springboot\repository\TaskRepository.class

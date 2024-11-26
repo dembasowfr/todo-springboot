@@ -29,6 +29,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
+    // Firts I will have to create the super user(authomaticly) and then the company admin
+
 
     // Constructors
     public User() {}
