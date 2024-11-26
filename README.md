@@ -42,6 +42,7 @@ To test these endpoints using Postman:
 
 By following these steps, you can interact with the API and test all the available endpoints for `Company`, `User`, and `Task`.
 
+**Note**: You can find the Postman collection for this project in the `postman` directory. Import this collection into Postman to quickly get started with testing the API.
 ![Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
 
 
@@ -231,8 +232,9 @@ By following these steps, you can interact with the API and test all the availab
   - **Method**: `POST`
   - **Description**: Creates a new user.
   - **Request Body Example**:
+
     ```json
-   {
+    {
 
         "name": "Rooon",
         "surname": "Weasley",
@@ -244,7 +246,8 @@ By following these steps, you can interact with the API and test all the availab
         }
     }
     ```
-  - **Response Example**:
+
+- **Response Example**:
     ```json
     {
         "id": 2,
@@ -272,7 +275,7 @@ By following these steps, you can interact with the API and test all the availab
         "email": "harry@example.com"
     }
     ```
-  - **Response Example**:
+- **Response Example**:
     ```json
     {
         "id": 2,
