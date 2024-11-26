@@ -31,7 +31,7 @@ To get started with the project:
 ## 3. Usage
 Once the application is up and running, you can interact with it through various endpoints:
 
-### Testing with Postman
+## 4. Testing with Postman
 
 To test these endpoints using Postman:
 
@@ -42,11 +42,7 @@ To test these endpoints using Postman:
 
 By following these steps, you can interact with the API and test all the available endpoints for `Company`, `User`, and `Task`.
 
-
-### 4. Test Custom Endpoints
-
-You can test the custom endpoints provided by the application using Postman or any other API testing tool. Below is a description of how to manipulate the `Company`, `User`, and `Task` resources.
-
+[Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
 
 #### 4.1. Company API Endpoints
 
