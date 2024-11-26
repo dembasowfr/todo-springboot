@@ -1,2 +1,13 @@
 B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\Application.java
-B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\HelloController.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\controller\CompanyController.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\controller\TaskController.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\controller\UserController.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\entity\Company.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\entity\Task.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\entity\User.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\repository\CompanyRepository.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\repository\TaskRepository.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\repository\UserRepository.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\service\CompanyService.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\service\TaskService.java
+B:\projects\Erasmus+ Internship\Sports Unity\todo\src\main\java\com\example\springboot\service\UserService.java
