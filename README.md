@@ -42,7 +42,8 @@ To test these endpoints using Postman:
 
 By following these steps, you can interact with the API and test all the available endpoints for `Company`, `User`, and `Task`.
 
-[Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
+![Postman API Endpoints Architecture](../todo/src/images/postman-api-endpoints.png)
+
 
 #### 4.1. Company API Endpoints
 
