@@ -20,8 +20,30 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
+    // Create a new Task
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
+
+    // Get a Task by ID
+    @GetMapping("/{id}")
+    public Task getTaskById(@PathVariable Long id) {
+        return taskService.getTaskById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+    }
+
+    // Update an existing Task
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+        return taskService.updateTask(id, task);
+    }
+
+    // Delete a Task
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+    }
+
+    
 }

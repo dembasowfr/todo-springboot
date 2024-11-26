@@ -1,6 +1,7 @@
 package com.example.springboot.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "tasks") // task is a reserved keyword in H2 database
@@ -15,6 +16,8 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    // Avoid circular reference when serializing User -> Task -> User
+    @JsonBackReference
     private User user;
 
     // Getters and Setters
