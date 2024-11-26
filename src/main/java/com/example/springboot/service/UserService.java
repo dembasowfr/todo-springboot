@@ -1,12 +1,15 @@
 package com.example.springboot.service;
 
 import com.example.springboot.entity.User;
+import com.example.springboot.entity.Company;
+
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 
 @Service
@@ -18,6 +21,37 @@ public class UserService {
     public UserService(UserRepository userRepository, CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
+
+        // Initialize default super user and company
+        initializeDefaultData();
+    }
+
+    // Initialize default company and user
+    private void initializeDefaultData() {
+        // Check if default company exists
+        if (companyRepository.count() == 0) {
+            Company defaultCompany = new Company(
+                
+                "Sports Unity",
+                "Madrid Spain",
+                "+31123456789",
+                "sportsunity@gmail.com",
+                "https://www.sportsunity.com"
+            );
+            
+            companyRepository.save(defaultCompany);
+
+            // Add a default Super User to the default company
+            User superUser = new User(
+                "Jorge",
+                "Lopez",
+                "superadmin",
+                "SUPER_USER",
+                "superadmin@example.com",
+                defaultCompany
+            );
+            userRepository.save(superUser);
+        }
     }
 
     // Create a new User
