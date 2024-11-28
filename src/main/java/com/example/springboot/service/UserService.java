@@ -56,13 +56,37 @@ public class UserService {
 
     // // Create a new User
     public User createUser(User user, Long user_id) {
+
+
+
+        //If there's only 1 company,
+        // The current user can only create SUPER_USER within 
+        // that super company.
+        // Otherwise,  if the SUPER USER tries to create an ADMIN USER,
+        // or a STANDARD USER, first they will have to create a normal company
+        // and then create the user within that company.
+
         User currentUser = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
         String user_role = currentUser.getRole();
 
         switch (user_role) {
             case "SUPER_USER":
-                // Save user to the repository
-                return userRepository.save(user);
+                // SUPER_USER can create:
+                //1. unlimited SUPER_USER within the default company(only super users can be created in the default company)
+                //2. unlimited ADMIN_USER and STANDARD_USER within other companies
+                // Check if the company exists
+                if(user.getCompany().getId() == 1 && user.getRole() != "SUPER_USER"){
+                    throw new RuntimeException("DEFAULT COMPANY can Only Have SUPER USERS💬");
+                }
+                else if (user.getCompany().getId() != 1 && user.getRole() == "SUPER_USER") {
+                    // Save user to the repository
+                    throw new RuntimeException("SUPER USERS can only create SUPER USERS for the DEFAULT COMPANY!!!.");
+                    //throw new RuntimeException("SUPER USERS can only create users for the default company!!!.");
+                }
+                else{
+                    return userRepository.save(user);
+                }
+                
             case "ADMIN_USER":
                 // Check if the company exists
                 // ADMIN_USER can only create users for their company
@@ -76,7 +100,6 @@ public class UserService {
                 }
             case "STANDARD_USER":
                 throw new RuntimeException("STANDARD USERS can not create a user!!!.");
-
             default:
                 // Company id does not exist
                 throw new RuntimeException("Company with id " + user.getCompany().getId() + " does not exist!!!");
@@ -144,7 +167,6 @@ public class UserService {
 
     }
 
-   
 
 
     // Update an existing User

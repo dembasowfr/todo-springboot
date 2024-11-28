@@ -31,7 +31,6 @@ public class CompanyController {
     @PostMapping
     public ResponseEntity<?> createCompany(@RequestBody Company company, @RequestParam Long user_id) {
         try {
-
             // Save the company
             Company createdCompany = companyService.createCompany(company, user_id);
             // Add compnay

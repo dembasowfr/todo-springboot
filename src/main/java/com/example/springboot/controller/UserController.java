@@ -36,7 +36,7 @@ public class UserController {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("timestamp", LocalDateTime.now());
             errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("error", e.getClass().getSimpleName());
             errorResponse.put("message", e.getMessage());
             errorResponse.put("path", "/api/users");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
