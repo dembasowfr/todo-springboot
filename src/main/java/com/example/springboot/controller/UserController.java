@@ -85,23 +85,41 @@ public class UserController {
 
     // Update an existing User
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user, @RequestParam Long user_id) {
         try {
-            User updatedUser = userService.updateUser(id, user);
+            User updatedUser = userService.updateUser(id, user, user_id);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/users/" + id);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
         }
     }
 
     // Delete a User
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-       try{
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam Long user_id) {
+        try {
+            userService.deleteUser(id, user_id);
+            // Return Success message 
+            return ResponseEntity.ok("User with id: "+id+ " has been deleted successfully ✅");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-       }
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/users/" + id);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
+        }
+      
     }
 }

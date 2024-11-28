@@ -168,30 +168,101 @@ public class UserService {
 
 
     // Update an existing User
-    public User updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
-            user.setName(updatedUser.getName());
-            user.setSurname(updatedUser.getSurname());
-            user.setEmail(updatedUser.getEmail());
-            user.setRole(updatedUser.getRole());
-            user.setCompany(updatedUser.getCompany());
+    public User updateUser(Long id, User updatedUser, Long user_id) {
+        //Get user role by user_id
+        User currentUser = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
+        String user_role = currentUser.getRole();
+        
+        switch(user_role){
+            case "SUPER_USER":
+                // SUPER USERS can update any user
+                return userRepository.findById(id).map(user -> {
+                    user.setName(updatedUser.getName());
+                    user.setSurname(updatedUser.getSurname());
+                    user.setEmail(updatedUser.getEmail());
+                    // role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER
+                    if (!updatedUser.getRole().equals("SUPER_USER") && !updatedUser.getRole().equals("ADMIN_USER") && !updatedUser.getRole().equals("STANDARD_USER")) {
+                        throw new RuntimeException("Role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER!!!");
+                    }else{
+                        user.setRole(updatedUser.getRole());
+                    }
+                    user.setCompany(updatedUser.getCompany());
+                    return userRepository.save(user);
+                }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
-            return userRepository.save(user);
-        }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+            case "ADMIN_USER":
+                // ADMIN USERS can only update themselves or users within their company
+                return userRepository.findById(id).map(user -> {
+                    if (user.getId() == currentUser.getId() ||user.getCompany().getId() == currentUser.getCompany().getId()) {
+                        user.setName(updatedUser.getName());
+                        user.setSurname(updatedUser.getSurname());
+                        user.setEmail(updatedUser.getEmail());
+                       // role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER
+                        if (!updatedUser.getRole().equals("SUPER_USER") && !updatedUser.getRole().equals("ADMIN_USER") && !updatedUser.getRole().equals("STANDARD_USER")) {
+                            throw new RuntimeException("Role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER!!!");
+                        }else{
+                            user.setRole(updatedUser.getRole());
+                        }
+                        user.setCompany(updatedUser.getCompany());
+                        return userRepository.save(user);
+                    }
+                    else {
+                        throw new RuntimeException("ADMIN USERS can only update THEMSELVES or STANDARD USERS within their COMPANY!!!");
+                    }
+                }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+            case "STANDARD_USER":
+                // STANDARD USERS can only update themselves
+                return userRepository.findById(id).map(user -> {
+                    if (user.getId() == currentUser.getId()) {
+                        user.setName(updatedUser.getName());
+                        user.setSurname(updatedUser.getSurname());
+                        user.setEmail(updatedUser.getEmail());
+                        // role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER
+                        if (!updatedUser.getRole().equals("SUPER_USER") && !updatedUser.getRole().equals("ADMIN_USER") && !updatedUser.getRole().equals("STANDARD_USER")) {
+                            throw new RuntimeException("Role has to be either SUPER_USER, ADMIN_USER, or STANDARD_USER!!!");
+                        }else{
+                            user.setRole(updatedUser.getRole());
+                        }
+                        user.setCompany(updatedUser.getCompany());
+                        return userRepository.save(user);
+                    } else {
+                        throw new RuntimeException("STANDARD USERS can only update THEMSELVES!!!");
+                    }
+                }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+            
+            default:
+                throw new RuntimeException("Current User not found with id: " + user_id);
+        }
     }
 
     // Delete a User
-    public void deleteUser(Long id) {
-        try{
-            // Delete a User by ID (Give a message if the User is not found)
-            if (!userRepository.findById(id).isPresent()) {
-                throw new RuntimeException("User not found with id: " + id);
-            }
-            else{
+    public void deleteUser(Long id, Long user_id) {
+        // SUPER_USER can delete any users
+        // ADMIN_USER can only delete themselves or users within their company
+        // STANDARD_USER can only delete themselves
+        User currentUser = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
+        String user_role = currentUser.getRole();
+
+        switch(user_role){
+            case "SUPER_USER":
                 userRepository.deleteById(id);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+                break;
+            case "ADMIN_USER":
+                if (id == currentUser.getId() || userRepository.findById(id).map(user -> user.getCompany().getId() == currentUser.getCompany().getId()).orElse(false)) {
+                    userRepository.deleteById(id);
+                } else {
+                    throw new RuntimeException("ADMIN USERS can only delete THEMSELVES or STANDARD USERS within their COMPANY!!!");
+                }
+                break;
+            case "STANDARD_USER":
+                if (id == currentUser.getId()) {
+                    userRepository.deleteById(id);
+                } else {
+                    throw new RuntimeException("STANDARD USERS can only delete THEMSELVES!!!");
+                }
+                break;
+            default:
+                throw new RuntimeException("Current User not found with id: " + user_id);
         }
     }
 }
