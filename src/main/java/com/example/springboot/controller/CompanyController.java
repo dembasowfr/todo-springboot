@@ -93,19 +93,40 @@ public class CompanyController {
 
     // Update an existing Company
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompany(@PathVariable Long id, @RequestBody Company company) {
+    public ResponseEntity<?> updateCompany(@PathVariable Long id, @RequestBody Company company, @RequestParam Long user_id) {
         try {
-            Company updatedCompany = companyService.updateCompany(id, company);
-            return ResponseEntity.ok(updatedCompany);
+            Company updatedCompany = companyService.updateCompany(id, company, user_id);
+            return ResponseEntity.ok("Company with id: "+id+ " has been updated successfully ✅");
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/companies");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
         }
     }
 
     // Delete a Company
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
-        companyService.deleteCompany(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteCompany(@PathVariable Long id, @RequestParam Long user_id) {
+        try {
+            companyService.deleteCompany(id, user_id);
+            // Return Success message 
+            return ResponseEntity.ok("Company with id: "+id+ " has been deleted successfully ✅");
+        } catch (RuntimeException e) {
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/companies");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
+        }
     }
 }

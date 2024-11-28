@@ -84,25 +84,73 @@ public class CompanyService {
     }
 
     // Update an existing Company
-    public Company updateCompany(Long id, Company updatedCompany) {
-        return companyRepository.findById(id).map(company -> {
-            company.setName(updatedCompany.getName());
-            company.setAddress(updatedCompany.getAddress());
-            company.setPhoneNumber(updatedCompany.getPhoneNumber());
-            company.setEmail(updatedCompany.getEmail());
-            company.setWebsite(updatedCompany.getWebsite());
+    public Company updateCompany(Long id, Company updatedCompany, Long user_id) {
+        //Get user role by user_id
+        User currentUser = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
+        String user_role = currentUser.getRole();
 
-            return companyRepository.save(company);
+        // here SUPER_USER can update any company
+        // ADMIN_USER can only update the company they belong to
+        // STANDARD_USER can not update any company
 
-        }).orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
+        switch (user_role) {
+            case "SUPER_USER":
+                Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
+                company.setName(updatedCompany.getName());
+                company.setAddress(updatedCompany.getAddress());
+                company.setEmail(updatedCompany.getEmail());
+                company.setPhoneNumber(updatedCompany.getPhoneNumber());
+                company.setWebsite(updatedCompany.getWebsite());
+                return companyRepository.save(company);
+            case "ADMIN_USER":
+                // here if this admin belongs to this company, then update the company
+                if (currentUser.getCompany().getId() == id) {
+                    Company company1 = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
+                    company1.setName(updatedCompany.getName());
+                    company1.setAddress(updatedCompany.getAddress());
+                    company1.setEmail(updatedCompany.getEmail());
+                    company1.setPhoneNumber(updatedCompany.getPhoneNumber());
+                    company1.setWebsite(updatedCompany.getWebsite());
+                    return companyRepository.save(company1);
+                }
+                else {
+                    throw new RuntimeException("ADMIN USERS can only update their own company!!!"); 
+                }
+            case "STANDARD_USER":
+                throw new RuntimeException("STANDARD USERS can not update any company!!!"); 
+            default:
+                throw new RuntimeException("Company with id" + id + " does not exist!!!");
+        }
     }
 
     // Delete a Company
-    public void deleteCompany(Long id) {
-        try {
-            companyRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+    public void deleteCompany(Long id, Long user_id) {
+        // SUPER_USER can delete any companies that belong to other users only
+        // other users can not delete any company
+        // Get user role by user_id
+        User currentUser = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
+        String user_role = currentUser.getRole();
+
+        switch(user_role) {
+            case "SUPER_USER":
+                // The company id should be different from the current user's company id
+                if (currentUser.getCompany().getId() == id) {
+                    throw new RuntimeException("SUPER USERS can not delete their own company!!!");
+                }
+                else {
+                    // Check if the company exists before attempting to delete
+                    companyRepository.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
+                    companyRepository.deleteById(id); // Perform the delete
+                    // Refresh the database
+                    //companyRepository.flush();
+                    // if seccessful, return a message
+                    break;
+                    //throw new RuntimeException("Company with id " + id + " has been deleted successfully!!!");
+                }
+                //break;
+            default:
+                throw new RuntimeException("Only SUPER USERS can delete a company!!!");
         }
     }
 }
