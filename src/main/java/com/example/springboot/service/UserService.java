@@ -75,15 +75,13 @@ public class UserService {
                 //1. unlimited SUPER_USER within the default company(only super users can be created in the default company)
                 //2. unlimited ADMIN_USER and STANDARD_USER within other companies
                 // Check if the company exists
-                if(user.getCompany().getId() == 1 && user.getRole() != "SUPER_USER"){
+                if (user.getCompany().getId() == 1 && !user.getRole().equals("SUPER_USER")) {
                     throw new RuntimeException("DEFAULT COMPANY can Only Have SUPER USERS💬");
-                }
-                else if (user.getCompany().getId() != 1 && user.getRole() == "SUPER_USER") {
-                    // Save user to the repository
+                } else if (user.getCompany().getId() != 1 && user.getRole().equals("SUPER_USER")) {
                     throw new RuntimeException("SUPER USERS can only create SUPER USERS for the DEFAULT COMPANY!!!.");
-                    //throw new RuntimeException("SUPER USERS can only create users for the default company!!!.");
-                }
-                else{
+                } else if (!companyRepository.findById(user.getCompany().getId()).isPresent()) {
+                    throw new RuntimeException("Company with id " + user.getCompany().getId() + " does not exist!!!.");
+                } else {
                     return userRepository.save(user);
                 }
                 
