@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -21,14 +25,21 @@ public class UserController {
    
     // Create a new User
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user, @RequestParam Long user_id) {
 
         try{
-            User createdUser = userService.createUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+            User createdUser = userService.createUser(user, user_id);
+            return ResponseEntity.ok(createdUser);
+
         } catch (RuntimeException e) {
-            // Show the exact error message in the response body
-            throw new RuntimeException("Error: " + e.getMessage());
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/users");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
         }
     }
 
@@ -36,24 +47,39 @@ public class UserController {
 
     // Get all Users
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<?> getAllUsers(@RequestParam Long user_id) {
         try {
-            List<User> users = userService.getAllUsers();
+            List<User> users = userService.getAllUsers(user_id);
             return ResponseEntity.ok(users);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/users");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
         }
     }
 
     // Get a User by ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam Long user_id) {
         try {
-            return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+            User user = userService.getUserById(id, user_id);
+            return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            // Return a detailed error response with the exception message
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("timestamp", LocalDateTime.now());
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("path", "/api/users/" + id);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);  // 500 Internal Server Error with error details
         }
     }
 

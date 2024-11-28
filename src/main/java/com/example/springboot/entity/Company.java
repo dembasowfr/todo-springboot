@@ -2,6 +2,9 @@ package com.example.springboot.entity;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.ArrayList;
+
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -31,18 +34,20 @@ public class Company {
     @JsonManagedReference // Serialize the users associated with the company
     private List<User> users;
 
+
     // Default constructor (required by JPA if using Hibernate or similar ORM)
     public Company() {}
 
     // Parameterized constructor
-    public Company(String name, String address, String phoneNumber, String email, String website, String creator_id) {
+    public Company(String name, String address, String phoneNumber, String email, String website) {
+  
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.website = website;
+        this.users = new ArrayList<>();
 
-        //this.creatorId = creator_id;
     }
     
 
