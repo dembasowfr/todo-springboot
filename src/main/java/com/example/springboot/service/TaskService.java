@@ -202,29 +202,32 @@ public class TaskService {
     
 
     // Delete a Task
-   public void deleteTask(Long id, Long user_id) {
+   
+   public void deleteTask(Long id,  Long user_id) {
         User currentUser = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + user_id));
         String user_role = currentUser.getRole();
 
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
-
+        
         switch (user_role) {
             case "SUPER_USER":
-                taskRepository.deleteById(id);
+                //find the task by id and delete it
+                if (taskRepository.findById(id).isPresent()) {
+                    taskRepository.deleteById(id);
+                } else {
+                    throw new RuntimeException("Task not found with id: " + id);
+                }
                 break;
 
             case "ADMIN_USER":
-                if (task.getUser().getCompany().getId() == currentUser.getCompany().getId()) {
+                if (taskRepository.findById(id).get().getUser().getCompany().getId().equals(currentUser.getCompany().getId())) {
                     taskRepository.deleteById(id);
                 } else {
                     throw new RuntimeException("ADMIN USER can only delete tasks within their company.");
                 }
                 break;
-
             case "STANDARD_USER":
-                if (task.getUser().getId() == currentUser.getId()) {
+                if (taskRepository.findById(id).get().getUser().getId().equals(currentUser.getId())) {
                     taskRepository.deleteById(id);
                 } else {
                     throw new RuntimeException("STANDARD USER can only delete their own tasks.");

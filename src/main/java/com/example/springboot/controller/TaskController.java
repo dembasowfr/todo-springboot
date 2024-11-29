@@ -103,12 +103,13 @@ public class TaskController {
         }
     }
 
-    /*// Delete a Task
-    @DeleteMapping("/{id}   ")
-    public void deleteTask(@PathVariable Long id, @RequestParam Long user_id) {
+    // Delete a Task
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id, @RequestParam Long user_id) {
         try{
             taskService.deleteTask(id, user_id);
-
+            // Return Success message 
+            return ResponseEntity.ok("Task with id: "+id+ " has been deleted successfully ✅");
         } catch (RuntimeException e) {
             // Return a detailed error response with the exception message
             Map<String, Object> errorResponse = new HashMap<>();
@@ -117,8 +118,9 @@ public class TaskController {
             errorResponse.put("error", "Internal Server Error");
             errorResponse.put("message", e.getMessage());
             errorResponse.put("path", "/api/tasks/" + id);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    */
+    
 }
