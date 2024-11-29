@@ -20,6 +20,7 @@ To get started with the project:
 2. **Build the project** using Maven:
    ```bash
    ./mvnw clean install
+   ./mvnw compile
    ```
 
 3. **Start the application** with Spring Boot:
