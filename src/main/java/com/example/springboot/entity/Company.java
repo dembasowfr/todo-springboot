@@ -2,6 +2,9 @@ package com.example.springboot.entity;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.ArrayList;
+
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -19,10 +22,34 @@ public class Company {
     private String phoneNumber; // Add phone number field
     private String website; // Add website field
 
+    // company also has creator:
+    //private String creatorId; // Add creator field
+
+    // Here if the creator is not given in the 
+    // request, the default creator will be the SUPER_USER
+
+
 
     @OneToMany(mappedBy = "company")
     @JsonManagedReference // Serialize the users associated with the company
     private List<User> users;
+
+
+    // Default constructor (required by JPA if using Hibernate or similar ORM)
+    public Company() {}
+
+    // Parameterized constructor
+    public Company(String name, String address, String phoneNumber, String email, String website) {
+  
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.website = website;
+        this.users = new ArrayList<>();
+
+    }
+    
 
     // Getters and Setters
     public Long getId() { return id; }
